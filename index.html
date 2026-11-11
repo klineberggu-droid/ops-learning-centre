@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Operations Learning Centre | Business Studies</title>
+<style>
+:root{--bg:#f7f6f2;--card:#fff;--ink:#1d2433;--mut:#5d6678;--line:#e2e0d8;--acc:#1f6f5c;--acc2:#e8f3ef;--bad:#b3402f;--good:#1f7a45}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#14171d;--card:#1d222b;--ink:#eceff4;--mut:#9aa4b5;--line:#2c3340;--acc:#5fc4a8;--acc2:#1c2e2a;--bad:#ef8b7b;--good:#6fd09a}}
+:root[data-theme=dark]{--bg:#14171d;--card:#1d222b;--ink:#eceff4;--mut:#9aa4b5;--line:#2c3340;--acc:#5fc4a8;--acc2:#1c2e2a;--bad:#ef8b7b;--good:#6fd09a}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+header{padding:28px 20px 8px;max-width:860px;margin:auto}
+h1{font:700 1.7rem/1.2 Georgia,serif;margin:0 0 4px}
+.sub{color:var(--mut);margin:0}
+nav{max-width:860px;margin:14px auto 0;padding:0 20px;display:flex;gap:6px;flex-wrap:wrap}
+nav button,.btn{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:999px;cursor:pointer}
+nav button.on,.btn.pri{background:var(--acc);color:#fff;border-color:var(--acc)}
+main{max-width:860px;margin:auto;padding:16px 20px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:12px 0}
+details.card summary{cursor:pointer;font-weight:600;font-size:1.05rem}
+details.card[open] summary{margin-bottom:8px}
+h3{margin:14px 0 4px;font-size:.95rem;color:var(--acc);text-transform:uppercase;letter-spacing:.04em}
+ul{margin:4px 0 8px;padding-left:20px}li{margin:3px 0}
+.tag{display:inline-block;background:var(--acc2);color:var(--acc);border-radius:6px;padding:1px 8px;font-size:.8rem;margin-right:6px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+select,input,textarea{font:inherit;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px;max-width:100%}
+.fc{min-height:190px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:1.15rem;cursor:pointer;padding:24px}
+.fc small{display:block;color:var(--mut);margin-top:10px;font-size:.8rem}
+.opt{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit;cursor:pointer}
+.opt.right{border-color:var(--good);background:var(--acc2)}.opt.wrong{border-color:var(--bad)}
+.bar{height:8px;background:var(--line);border-radius:6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--acc)}
+.mut{color:var(--mut);font-size:.9rem}
+.ok{color:var(--good)}.no{color:var(--bad)}
+</style></head><body>
+<header><h1>Operations Learning Centre</h1>
+<p class="sub">Business Studies Stage 6 · Operations · built from your syllabus</p></header>
+<nav id="nav"></nav><main id="app"></main>
+<script>
+const TOPICS=[
+{id:1,t:"Role of operations management",sy:["Strategic role of operations management: cost leadership, good/service differentiation","Goods and/or services in different industries","Interdependence with other key business functions"],
+n:[["What it is","Operations management is the management of the processes that transform inputs (resources) into outputs: goods and services."],
+["Strategic role","Operations helps the business achieve its overall goals and competitive advantage. Two key approaches:",["Cost leadership: producing at the lowest cost in the industry so the business can charge low prices or earn higher margins (efficiency, economies of scale, minimising waste).","Differentiation: offering something unique that customers value, such as quality, features, design or service, often supporting a higher price."]],
+["Goods vs services","Goods are tangible and can be stored. Services are intangible, are produced and consumed at the same time, and cannot be stored. Customer contact is usually higher in services. Many businesses provide a mix of both (e.g. a restaurant sells food and service)."],
+["Interdependence","Operations relies on, and supports, other key business functions:",["Marketing: demand forecasts and customer needs shape what and how much is produced.","Finance: funds equipment, stock and wages; operations costs affect profit.","Human resources: supplies and trains the staff operations needs.","Operations output (product quality, cost) in turn affects marketing and finance results."]]]},
+{id:2,t:"Influences on operations",sy:["Globalisation, technology, quality expectations, cost-based competition, government policies, legal regulation, environmental sustainability","Corporate social responsibility: legal compliance vs ethical responsibility; environmental sustainability and social responsibility"],
+n:[["The influences",null,["Globalisation: access to overseas markets, suppliers and labour, but also more global competition.","Technology: automation and new systems change how goods and services are produced.","Quality expectations: customers expect consistent, reliable products.","Cost-based competition: pressure to keep costs and prices low.","Government policies: e.g. tariffs, subsidies, incentives and industry policy.","Legal regulation: laws on safety, consumer protection, employment and the environment.","Environmental sustainability: meeting needs without harming the environment for the future."]],
+["Corporate social responsibility (CSR)","CSR is a business’s commitment to behave ethically and consider its impact on society and the environment, beyond making a profit."],
+["Legal compliance vs ethical responsibility","Legal compliance means obeying the law (the minimum required). Ethical responsibility goes further: doing what is morally right even where the law does not require it."],
+["Sustainability and social responsibility","Environmental sustainability focuses on resource use, waste and pollution. Social responsibility focuses on the impact on people: employees, customers and the community. Both can be part of a CSR approach."]]},
+{id:3,t:"Operations processes",sy:["Inputs: transformed resources and transforming resources","Transformation processes: volume, variety, variation in demand, visibility; sequencing and scheduling (Gantt charts, critical path analysis); technology, task design, process layout; monitoring, control and improvement","Outputs: customer service, warranties"],
+n:[["Inputs",null,["Transformed resources are the things that get changed: materials, information and customers.","Transforming resources are what does the changing: human resources (staff) and facilities (buildings, equipment)."]],
+["Transformation processes: the 4 Vs","Volume (how much is made), variety (how many different products), variation in demand (how much demand changes over time) and visibility (how much the customer sees or is in contact with the process). High volume and low variety suit cost efficiency; high variety and high visibility need flexibility."],
+["Sequencing and scheduling",null,["Gantt chart: a bar chart showing tasks against a timeline, used to plan and track schedules.","Critical path analysis (CPA): maps the tasks that depend on each other. The critical path is the longest sequence of tasks and sets the shortest possible project time; a delay on it delays the whole project."]],
+["Technology, task design and process layout","Technology can speed up or automate tasks. Task design sets how work is divided and done. Process layout is the physical arrangement of equipment, work areas and staff to make the flow of work efficient."],
+["Monitoring, control and improvement","Measure performance, compare it with targets, correct problems and keep improving the process."],
+["Outputs","The goods and services produced. Customer service (support before, during and after sale) and warranties (a promise to repair or replace faulty products) add value to the output."]]},
+{id:4,t:"Operations strategies",sy:["Performance objectives; new product/service design and development; supply chain management; outsourcing; technology","Inventory management (LIFO, FIFO, JIT); quality management; overcoming resistance to change; global factors"],
+n:[["Performance objectives","Quality, speed, dependability, flexibility, customisation and cost. Businesses choose which to prioritise to match their strategy."],
+["New product or service design and development","Generating ideas, designing, testing and launching new offerings so the business stays competitive."],
+["Supply chain management",null,["The coordination of all steps from raw materials to the final customer.","Logistics: moving and storing goods. E-commerce: selling and ordering online. Global sourcing: buying inputs from the cheapest or best suppliers worldwide."]],
+["Outsourcing","Paying an external business to do a function. Advantages: can cut costs, access expertise, free up focus on core activities. Disadvantages: less control over quality, possible job losses, reliance on the supplier and communication issues."],
+["Technology","Leading edge technology is the newest available (potentially a competitive edge but costly and riskier). Established technology is proven and reliable (cheaper, but may not give an advantage)."],
+["Inventory management","Holding stock avoids running out and allows quick delivery, but costs money (storage, insurance, damage, tied-up funds).",["FIFO: first-in-first-out, oldest stock is used or sold first.","LIFO: last-in-first-out, newest stock is used or sold first.","JIT: just-in-time, stock arrives only as it is needed. This reduces holding costs but depends on reliable suppliers."]],
+["Quality management",null,["Quality control: inspecting and testing outputs to find defects.","Quality assurance: building quality into the whole process to prevent defects.","Quality improvement: continuously raising standards over time."]],
+["Overcoming resistance to change","Barriers: financial costs, purchasing new equipment, redundancy payments, retraining, reorganising the plant layout and inertia (people preferring the usual way). Strategies include communication, consultation and training."],
+["Global factors","Global sourcing, economies of scale (cost per unit falls as output rises), scanning and learning (watching global trends and competitors) and research and development (R&D)."]]}];
+
+const CARDS=[
+[1,"Operations management","Managing the processes that transform inputs into goods and services."],
+[1,"Cost leadership","Strategy of being the lowest-cost producer in the industry, through efficiency and economies of scale."],
+[1,"Differentiation","Strategy of making a good or service unique in ways customers value (quality, features, service)."],
+[1,"Key difference between goods and services","Goods are tangible and storable; services are intangible and produced and consumed at the same time."],
+[1,"Interdependence","Business functions rely on each other, e.g. operations needs demand forecasts from marketing and funds from finance."],
+[2,"Corporate social responsibility","A business’s commitment to act ethically and consider its impact on society and the environment."],
+[2,"Legal compliance vs ethical responsibility","Compliance = obeying the law (the minimum). Ethical responsibility = doing what is right beyond the law."],
+[2,"Environmental sustainability","Operating in a way that meets present needs without harming the environment for the future."],
+[2,"Name 7 influences on operations","Globalisation, technology, quality expectations, cost-based competition, government policies, legal regulation, environmental sustainability."],
+[3,"Transformed resources","The inputs that get changed: materials, information, customers."],
+[3,"Transforming resources","The inputs that do the changing: human resources and facilities."],
+[3,"The 4 Vs","Volume, variety, variation in demand, visibility."],
+[3,"Gantt chart","A bar chart of tasks against time, used to schedule and track a project."],
+[3,"Critical path analysis","Identifies the longest sequence of dependent tasks; it sets the minimum project time."],
+[3,"Process layout","The physical arrangement of equipment, work areas and staff to make work flow efficiently."],
+[3,"Warranty","A promise by the seller to repair or replace a faulty product within a set time."],
+[4,"Six performance objectives","Quality, speed, dependability, flexibility, customisation, cost."],
+[4,"Supply chain management","Coordinating every step from raw materials to the final customer (logistics, e-commerce, global sourcing)."],
+[4,"Outsourcing: advantages","Can lower costs, gives access to expertise, lets the business focus on core activities."],
+[4,"Outsourcing: disadvantages","Less control over quality, possible job losses, dependence on the supplier."],
+[4,"FIFO vs LIFO","FIFO uses or sells the oldest stock first; LIFO uses or sells the newest stock first."],
+[4,"Just-in-time (JIT)","Stock arrives only when needed, cutting holding costs but relying on dependable suppliers."],
+[4,"Quality control vs assurance vs improvement","Control = inspect outputs for defects. Assurance = build quality into the process. Improvement = keep raising standards."],
+[4,"Leading edge vs established technology","Leading edge = newest and potentially a competitive edge but costly/risky. Established = proven and reliable."],
+[4,"Resistance to change: causes","Financial costs, buying new equipment, redundancy payments, retraining, reorganising plant layout, inertia."],
+[4,"Economies of scale","Average cost per unit falls as the level of output increases."]];
+
+const QUIZ=[
+[1,"A business that aims to be the lowest-cost producer in its industry is following:",["Differentiation","Cost leadership","Outsourcing","Customisation"],1,"Cost leadership means competing by having the lowest costs."],
+[1,"Which is a feature of a service rather than a good?",["Tangible","Can be stored","Produced and consumed at the same time","Always high stock levels"],2,"Services are intangible and cannot be stored."],
+[1,"Operations needs funding for new equipment. Which function does it depend on?",["Finance","Marketing only","None, it is independent","Human resources only"],0,"Finance provides funds; this is an example of interdependence."],
+[2,"Following the law is an example of:",["Ethical responsibility","Legal compliance","Sustainability","Differentiation"],1,"Legal compliance is the minimum required by law."],
+[2,"A firm cuts pollution beyond what regulation requires. This is mainly:",["Legal compliance","Ethical and environmental responsibility","Cost leadership","Inertia"],1,"Going beyond the law reflects ethical responsibility and sustainability."],
+[2,"Which is NOT listed as an influence on operations in the syllabus?",["Globalisation","Legal regulation","Cost-based competition","Dividend policy"],3,"Dividend policy is a finance matter, not a listed operations influence."],
+[3,"Which is a transforming resource?",["Raw materials","Customers","Facilities","Information"],2,"Transforming resources are human resources and facilities."],
+[3,"Which is a transformed resource?",["Staff","Machinery","Materials","Buildings"],2,"Transformed resources: materials, information, customers."],
+[3,"The critical path in CPA is:",["The shortest sequence of tasks","The longest sequence of dependent tasks","The cheapest tasks","Tasks done by outsourcing"],1,"It is the longest path and sets the minimum project duration."],
+[3,"Which is NOT one of the 4 Vs?",["Volume","Variety","Visibility","Velocity"],3,"The 4 Vs: volume, variety, variation in demand, visibility."],
+[3,"A promise to repair or replace a faulty product is a:",["Warranty","Gantt chart","Logistic","Layout"],0,"Warranties are part of operations outputs."],
+[4,"Under which inventory method does stock arrive only when needed?",["FIFO","LIFO","JIT","Buffer stock"],2,"Just-in-time reduces holding costs."],
+[4,"Inspecting finished products to find defects is:",["Quality assurance","Quality control","Quality improvement","Outsourcing"],1,"Control detects defects; assurance prevents them."],
+[4,"A disadvantage of outsourcing is:",["Access to expertise","Loss of control over quality","Lower costs","Focus on core business"],1,"The others are advantages."],
+[4,"Inertia as a barrier to change means:",["Cost of redundancy","Preferring to keep doing things the usual way","Retraining costs","Equipment prices"],1,"Inertia is a reluctance to change."],
+[4,"Cost per unit falling as output rises describes:",["Economies of scale","Global sourcing","Differentiation","Scanning"],0,"This is economies of scale."]];
+
+const $=s=>document.querySelector(s);
+let S={tab:"notes",topic:0,done:{},mine:[]};
+try{S={...S,...JSON.parse(localStorage.getItem("opslc")||"{}")}}catch(e){}
+const save=()=>{try{localStorage.setItem("opslc",JSON.stringify({done:S.done,mine:S.mine}))}catch(e){}};
+const esc=t=>String(t).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const TABS=[["notes","Notes"],["cards","Flashcards"],["quiz","Quiz"],["mine","My notes"],["prog","Progress"]];
+function nav(){$("#nav").innerHTML=TABS.map(([k,l])=>`<button class="${S.tab==k?"on":""}" onclick="S.tab='${k}';render()">${l}</button>`).join("")}
+function topicSel(all=true){return `<select onchange="S.topic=+this.value;S.fc=null;S.qz=null;render()">${all?'<option value="0">All topics</option>':""}${TOPICS.map(t=>`<option value="${t.id}" ${S.topic==t.id?"selected":""}>${t.id}. ${t.t}</option>`).join("")}</select>`}
+function notes(){return TOPICS.map(t=>`<details class="card"><summary>${t.id}. ${t.t}</summary>
+<p class="mut"><b>Syllabus:</b> ${t.sy.map(esc).join(" · ")}</p>
+${t.n.map(([h,p,l])=>`<h3>${esc(h)}</h3>${p?`<p>${esc(p)}</p>`:""}${l?`<ul>${l.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}`).join("")}
+<div class="row"><button class="btn" onclick="S.tab='cards';S.topic=${t.id};S.fc=null;render()">Flashcards</button><button class="btn" onclick="S.tab='quiz';S.topic=${t.id};S.qz=null;render()">Quiz</button></div></details>`).join("")}
+function deck(){return[...CARDS.map(c=>({t:c[0],q:c[1],a:c[2]})),...S.mine.map(c=>({t:+c.t,q:c.q,a:c.a}))].filter(c=>!S.topic||c.t==S.topic)}
+function cards(){
+ if(!S.fc||S.fc.topic!=S.topic)S.fc={topic:S.topic,i:0,flip:false,d:deck()};
+ const f=S.fc,c=f.d[f.i];
+ return `<div class="row">${topicSel()}<button class="btn" onclick="S.fc.d.sort(()=>Math.random()-.5);S.fc.i=0;S.fc.flip=false;render()">Shuffle</button></div>`+
+ (c?`<div class="card fc" onclick="S.fc.flip=!S.fc.flip;render()"><div>${f.flip?esc(c.a):esc(c.q)}<small>${f.flip?"Answer":"Tap to reveal"} · ${f.i+1} of ${f.d.length}</small></div></div>
+ <div class="row"><button class="btn" onclick="S.fc.i=(S.fc.i-1+S.fc.d.length)%S.fc.d.length;S.fc.flip=false;render()">Prev</button><button class="btn pri" onclick="S.fc.i=(S.fc.i+1)%S.fc.d.length;S.fc.flip=false;render()">Next</button></div>`:'<p class="mut">No cards for this topic yet.</p>')}
+function quiz(){
+ if(!S.qz||S.qz.topic!=S.topic){S.qz={topic:S.topic,i:0,s:0,pick:null,end:false,q:QUIZ.filter(q=>!S.topic||q[0]==S.topic).sort(()=>Math.random()-.5),res:[]}}
+ const z=S.qz,h=`<div class="row">${topicSel()}</div>`;
+ if(z.end){const p=Math.round(z.s/z.q.length*100);S.done["q"+(S.topic||0)]=Math.max(S.done["q"+(S.topic||0)]||0,p);save();
+  return h+`<div class="card"><h2>${z.s} / ${z.q.length} (${p}%)</h2><button class="btn pri" onclick="S.qz=null;render()">Try again</button></div>`}
+ const q=z.q[z.i];
+ return h+`<div class="card"><p class="mut">Question ${z.i+1} of ${z.q.length} <span class="tag">Topic ${q[0]}</span></p><p><b>${esc(q[1])}</b></p>
+ ${q[2].map((o,k)=>`<button class="opt ${z.pick!=null?(k==q[3]?"right":k==z.pick?"wrong":""):""}" ${z.pick!=null?"disabled":""} onclick="ans(${k})">${esc(o)}</button>`).join("")}
+ ${z.pick!=null?`<p class="${z.pick==q[3]?"ok":"no"}">${z.pick==q[3]?"Correct. ":"Not quite. "}${esc(q[4])}</p><button class="btn pri" onclick="nextQ()">${z.i+1<z.q.length?"Next":"Finish"}</button>`:""}</div>`}
+function ans(k){const z=S.qz;z.pick=k;if(k==z.q[z.i][3])z.s++;render()}
+function nextQ(){const z=S.qz;z.pick=null;z.i++;if(z.i>=z.q.length)z.end=true;render()}
+function mine(){return `<div class="card"><p class="mut">Add your own flashcards (e.g. class examples or teacher notes). They save in this browser.</p>
+ <div class="row"><select id="mt">${TOPICS.map(t=>`<option value="${t.id}">${t.id}. ${t.t}</option>`).join("")}</select></div>
+ <div class="row"><input id="mq" placeholder="Question / term" style="flex:1;min-width:200px"></div>
+ <div class="row"><textarea id="ma" rows="3" placeholder="Answer" style="flex:1;min-width:200px"></textarea></div>
+ <button class="btn pri" onclick="addC()">Add card</button></div>
+ ${S.mine.map((c,i)=>`<div class="card"><span class="tag">Topic ${c.t}</span><b>${esc(c.q)}</b><p>${esc(c.a)}</p><button class="btn" onclick="S.mine.splice(${i},1);save();S.fc=null;render()">Delete</button></div>`).join("")}`}
+function addC(){const q=$("#mq").value.trim(),a=$("#ma").value.trim();if(!q||!a)return;S.mine.push({t:$("#mt").value,q,a});save();S.fc=null;render()}
+function prog(){const keys=[[0,"All topics"],...TOPICS.map(t=>[t.id,t.t])];
+ return keys.map(([k,l])=>{const v=S.done["q"+k]||0;return `<div class="card"><div class="row" style="justify-content:space-between"><b>${esc(l)}</b><span>Best quiz score: ${v}%</span></div><div class="bar"><i style="width:${v}%"></i></div></div>`}).join("")+
+ `<button class="btn" onclick="if(confirm('Reset all progress and custom cards?')){S.done={};S.mine=[];save();render()}">Reset</button>`}
+function render(){nav();$("#app").innerHTML={notes,cards,quiz,mine,prog}[S.tab]()}
+render();
+</script></body></html>
